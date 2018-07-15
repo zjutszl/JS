@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无标题文档</title>
+</head>
+
+<body>
+
+ <script>
+ .+? 表示最小匹配
+      举例说明.+?与.+的区别 <a href="xxx"><span>
+      如果用<.+>匹配，则匹配结果是 <a href="xxx"><span>
+      如果用<.+?>匹配，则匹配结果是 <a href="xxx">也就是.+?只要匹配就返回了，不会再接着往下找了
+  /*
+    exec()  
+	 如果没有匹配项返回null,否则返回的是一个数组
+	 [0]： 是与正则表达式相匹配的文本
+     [1]:  与 RegExpObject 的第 1 个子表达式相匹配的文本
+	 [2]:  与 RegExpObject 的第 2 个子表达式相匹配的文本
+  
+  */
+  var str = '/kidkidkid/';
+  var re = /^\/(kid){3}\/$/; 
+  var res = re.exec( str );
+  
+  
+  // 2
+  var str = 'This is 8google8';
+  var re = /8(.*)8/;
+  var res = str.replace(re,'<b>$1</b>');
+  document.write(res);
+   
+ 
+  // 3
+  
+  var str = 'soho baidu';
+  var re = /(.*)\s(.*)/;
+  var res =  re.exec(str);
+
+  
+  // 候选
+  
+  var str = 'I love her';
+  var re = /I love (her|him)/;
+  var res =  re.exec(str);
+ 
+  
+  // 分组  捕获型　　　-　()
+   
+ var reg = /(\d{4})-(\d{2})-(\d{2})/
+ var date = '2010-04-12'
+ // alert( reg.test(date) )
+
+ // alert(RegExp.$1)  // 2010
+ // alert(RegExp.$2)  // 04
+ // alert(RegExp.$3)  // 12
+  
+  
+  // 
+  var str = '12.21/2012';
+  var re = /(\d{2})\.(\d{2})\/(\d{4})/;
+  var res = str.replace( re,'$3-$1-$2');
+ 
+  
+  var str = '10 13 21 48 52'; 
+  var res = str.replace(/\d+/g, function(match) { 
+        // 参数match 是每一次匹配的项 
+      return parseInt(match) < 30 ? '*' : match;
+  })
+  
+ 
+  // 
+  var str = 'JAVASCRIPT';
+  var re = /[A-Z]/g;
+  var res = str.replace(re,function(args){
+	 return args.toLowerCase() 
+  });
+  
+  // 删除行内样式的引号
+  // <span style="font-family:微软雅黑;">demo</span>
+  var str = '<span style="font-family:\'微软雅黑\';">demo</span>';
+  var re = /\'[^']+\'/g;
+  var res = str.replace(re,function(){    
+	 var sResult = arguments[0]; 
+     sResult = sResult.replace(/\'/g,'') ;
+     return sResult;
+	
+  });
+  
+  
+  // 违禁词替换
+  var reg = /(kid|doubi)/g
+  var str = 'kid is a doubi'
+
+  var res  = str.replace(reg, function(word){
+     return word.replace(/./g, '*')
+  })
+  
+  
+   
+   // 反向引用
+   // \1引用了第一个被分组所捕获的串，换言之，表达式是动态决定的。如果编号越界了，则会被当成普通的表达式：
+	var reg = /(\w{3}) is \1/	
+	var r0 = reg.test('kid is kid')  // true
+	var r1 = reg.test('dik is dik')  // true
+	var r2 = reg.test('kid is dik')  // false
+	var r3 = reg.test('dik is kid')  // false
+    
+   
+   
+   // 非捕获型　-　(?:)
+   /**
+     有时候，我们只是想分个组，而没有捕获的需求，则可以使用非捕获型分组，语法为左括号后紧跟?:：
+   **/
+	var reg = /(?:\d{4})-(\d{2})-(\d{2})/
+	var date = '2012-12-21'
+	reg.test(date)
+	
+	var x1 = RegExp.$1  // 12
+	var x2 = RegExp.$2  // 21
+   
+   
+   // 正向前瞻型　-　(?=)
+   /**
+     就好像你站在原地，向前眺望：
+
+          正向前瞻型分组 - 你前方是这个东西吗？
+
+          负向前瞻型分组 - 你前方不是这个东西,对吗？
+
+   **/
+   var str = 'your name is anikin';
+   var re  = /your name is (?=anikin)/;
+   var res  = re.test( str );  // true
+   
+   
+   // 反向前瞻型　-　(?!)
+   
+   var str = 'your name is rose';
+   var re  = /your name is (?!anikin)/;
+   var res  = re.test( str );  // true
+   
+ 
+ 
+   //  前瞻性分组与非捕获型分组之间的区别
+   /*
+      可见，非捕获型分组匹配到的串，仍会被外层的捕获型分组捕获到，但前瞻型却不会。当你需要参考后面的值，又不想连它一起捕获时，前瞻型分组就派上用场了。
+   */
+	var reg, str = "kid is a anikin"	
+	reg = /(kid is a (?:anikin))/
+	reg.test(str)
+	alert( RegExp.$1);  // kid is a doubi
+	
+	reg = /(kid is a (?=anikin))/
+	reg.test(str)
+	alert( RegExp.$1);  // kis is a
+
+    
+    // 分组嵌套  从外向内开始
+   var str = 'ABC';
+   var re = /(A?(B?(C?)))/;
+   var res = re.exec(str);
+   alert( res ) 
+ 
+ </script>
+
+
+</body>
+</html>
